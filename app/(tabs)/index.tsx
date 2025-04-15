@@ -1,74 +1,187 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import React, { useState, useEffect } from 'react';
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  ScrollView, 
+  RefreshControl,
+  SafeAreaView,
+} from 'react-native';
+import { useJobStore } from '@/store/jobStore';
+import SearchBar from '@/components/SearchBar';
+import FilterBar from '@/components/FilterBar';
+import JobTypeSection from '@/components/JobTypeSection';
+import EmptyState from '@/components/EmptyState';
+import JobStats, { getRecentJobsCount } from '@/components/JobStats';
+import colors from '@/constants/colors';
+import { JobType, ExperienceLevel, Domain } from '@/types/job';
 
 export default function HomeScreen() {
+  const { 
+    jobs, 
+    filteredJobs,
+    searchQuery, 
+    setSearchQuery,
+    selectedJobType,
+    setSelectedJobType,
+    selectedExperienceLevel,
+    setSelectedExperienceLevel,
+    selectedDomain,
+    setSelectedDomain,
+    resetFilters
+  } = useJobStore();
+  
+  const [refreshing, setRefreshing] = useState(false);
+  const [isSearchActive, setIsSearchActive] = useState(false);
+  
+  // Group jobs by job type
+  const fullTimeJobs = filteredJobs.filter(job => job.jobType === 'Full-time');
+  const partTimeJobs = filteredJobs.filter(job => job.jobType === 'Part-time');
+  const contractJobs = filteredJobs.filter(job => job.jobType === 'Contract');
+  const internshipJobs = filteredJobs.filter(job => job.jobType === 'Internship');
+  
+  const recentJobsCount = getRecentJobsCount(jobs);
+  
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    // Simulate a refresh
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
+  }, []);
+  
+  const handleSearch = (text: string) => {
+    setSearchQuery(text);
+    setIsSearchActive(text.length > 0);
+  };
+  
+  const handleClearSearch = () => {
+    setSearchQuery('');
+    setIsSearchActive(false);
+  };
+  
+  const handleSelectJobType = (jobType: JobType | 'All') => {
+    setSelectedJobType(jobType);
+  };
+  
+  const handleSelectExperienceLevel = (level: ExperienceLevel | 'All') => {
+    setSelectedExperienceLevel(level);
+  };
+  
+  const handleSelectDomain = (domain: Domain | 'All') => {
+    setSelectedDomain(domain);
+  };
+  
+  const isFiltersActive = 
+    selectedJobType !== 'All' || 
+    selectedExperienceLevel !== 'All' || 
+    selectedDomain !== 'All';
+  
+  const showEmptyState = filteredJobs.length === 0;
+  
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <SafeAreaView style={styles.container}>
+      <SearchBar 
+        value={searchQuery}
+        onChangeText={handleSearch}
+        onClear={handleClearSearch}
+      />
+      
+      <FilterBar 
+        selectedJobType={selectedJobType}
+        selectedExperienceLevel={selectedExperienceLevel}
+        selectedDomain={selectedDomain}
+        onSelectJobType={handleSelectJobType}
+        onSelectExperienceLevel={handleSelectExperienceLevel}
+        onSelectDomain={handleSelectDomain}
+        onResetFilters={resetFilters}
+      />
+      
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        contentContainerStyle={styles.scrollContent}
+      >
+        {!showEmptyState && !isSearchActive && !isFiltersActive && (
+          <JobStats totalJobs={jobs.length} recentJobs={recentJobsCount} />
+        )}
+        
+        {showEmptyState ? (
+          <EmptyState />
+        ) : (
+          <>
+            {isSearchActive || isFiltersActive ? (
+              <View style={styles.searchResultsContainer}>
+                <Text style={styles.searchResultsTitle}>
+                  {filteredJobs.length} {filteredJobs.length === 1 ? 'result' : 'results'} found
+                </Text>
+                
+                {filteredJobs.map(job => (
+                  <JobTypeSection
+                    key={job.id}
+                    title={job.jobType}
+                    jobs={[job]}
+                    jobType={job.jobType}
+                    onViewAll={() => handleSelectJobType(job.jobType)}
+                  />
+                ))}
+              </View>
+            ) : (
+              <>
+                <JobTypeSection
+                  title="Full-time Positions"
+                  jobs={fullTimeJobs}
+                  jobType="Full-time"
+                  onViewAll={() => handleSelectJobType('Full-time')}
+                />
+                
+                <JobTypeSection
+                  title="Internship Opportunities"
+                  jobs={internshipJobs}
+                  jobType="Internship"
+                  onViewAll={() => handleSelectJobType('Internship')}
+                />
+                
+                <JobTypeSection
+                  title="Contract Work"
+                  jobs={contractJobs}
+                  jobType="Contract"
+                  onViewAll={() => handleSelectJobType('Contract')}
+                />
+                
+                <JobTypeSection
+                  title="Part-time Positions"
+                  jobs={partTimeJobs}
+                  jobType="Part-time"
+                  onViewAll={() => handleSelectJobType('Part-time')}
+                />
+              </>
+            )}
+          </>
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 24,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  searchResultsContainer: {
+    paddingTop: 16,
+  },
+  searchResultsTitle: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: colors.textSecondary,
+    marginBottom: 16,
+    paddingHorizontal: 16,
   },
 });

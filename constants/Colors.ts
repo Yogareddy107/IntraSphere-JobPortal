@@ -1,26 +1,32 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
+const colors = {
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
 
-export const Colors = {
-  light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
-  },
-  dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
-  },
+
+  
+  primary: '#4361ee',
+  primaryLight: '#4895ef',
+  secondary: '#f72585',
+  background: '#ffffff',
+  card: '#f8f9fa',
+  text: '#212529',
+  textSecondary: '#6c757d',
+  border: '#dee2e6',
+  success: '#38b000',
+  warning: '#ffaa00',
+  error: '#d00000',
+  info: '#3a86ff',
+  
+  // Job type colors
+  fullTime: '#4361ee',
+  partTime: '#4cc9f0',
+  contract: '#7209b7',
+  internship: '#f72585',
+  
+  // Experience level colors
+  entry: '#38b000',
+  mid: '#ffaa00',
+  senior: '#f72585',
+  lead: '#7209b7',
 };
+
+export default colors;
