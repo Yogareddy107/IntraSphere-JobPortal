@@ -4,7 +4,7 @@
     "slug": "intrasphere",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png", // Make sure this is a square image, e.g., 1024x1024
+    "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "ios": {
@@ -12,10 +12,13 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png", // Make sure this is a square image
+        "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.intrasphere.app"
+      "package": "com.intrasphere.app",
+      "config": {
+        "googleMobileAdsAppId": "ca-app-pub-4940119719361052~6375825757"
+      }
     },
     "web": {
       "bundler": "metro",

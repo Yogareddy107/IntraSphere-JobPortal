@@ -20,6 +20,7 @@ import {
   LogOut,
   ChevronRight,
 } from 'lucide-react-native';
+import { AdMobBanner } from 'expo-ads-admob';
 import { useJobStore } from '@/store/jobStore';
 import Button from '@/components/Button';
 import colors from '@/constants/colors';
@@ -35,16 +36,10 @@ export default function SettingsScreen() {
       'Export Data',
       'This will export all your job data as a JSON file.',
       [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
+        { text: 'Cancel', style: 'cancel' },
         {
           text: 'Export',
-          onPress: () => {
-            // In a real app, this would save the data to a file
-            Alert.alert('Success', 'Data exported successfully!');
-          },
+          onPress: () => Alert.alert('Success', 'Data exported successfully!'),
         },
       ]
     );
@@ -55,16 +50,10 @@ export default function SettingsScreen() {
       'Import Data',
       'This will replace your current data with the imported data.',
       [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
+        { text: 'Cancel', style: 'cancel' },
         {
           text: 'Import',
-          onPress: () => {
-            // In a real app, this would import data from a file
-            Alert.alert('Success', 'Data imported successfully!');
-          },
+          onPress: () => Alert.alert('Success', 'Data imported successfully!'),
         },
       ]
     );
@@ -75,17 +64,11 @@ export default function SettingsScreen() {
       'Clear All Data',
       'This will permanently delete all your saved jobs. This action cannot be undone.',
       [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
+        { text: 'Cancel', style: 'cancel' },
         {
           text: 'Delete',
           style: 'destructive',
-          onPress: () => {
-            // In a real app, this would clear all data
-            Alert.alert('Success', 'All data has been cleared.');
-          },
+          onPress: () => Alert.alert('Success', 'All data has been cleared.'),
         },
       ]
     );
@@ -106,7 +89,7 @@ export default function SettingsScreen() {
       [{ text: 'OK' }]
     );
   };
-  
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -218,6 +201,16 @@ export default function SettingsScreen() {
           icon={<LogOut size={18} color={colors.primary} style={{ marginRight: 8 }} />}
           style={styles.signOutButton}
         />
+
+        {/* AdMob Banner */}
+        <View style={styles.adContainer}>
+          <AdMobBanner
+            bannerSize="smartBannerPortrait"
+            adUnitID="ca-app-pub-4940119719361052/3982193172" // Replace with your actual Ad Unit ID
+            servePersonalizedAds
+            onDidFailToReceiveAdWithError={(error) => console.log(error)}
+          />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -230,6 +223,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 16,
+    paddingBottom: 48,
   },
   section: {
     backgroundColor: colors.card,
@@ -277,5 +271,9 @@ const styles = StyleSheet.create({
   },
   signOutButton: {
     marginBottom: 24,
+  },
+  adContainer: {
+    alignItems: 'center',
+    marginTop: 12,
   },
 });

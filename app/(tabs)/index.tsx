@@ -1,3 +1,4 @@
+// index.tsx
 import React, { useState, useEffect } from 'react';
 import { 
   View, 
@@ -7,6 +8,7 @@ import {
   RefreshControl,
   SafeAreaView,
 } from 'react-native';
+import { AdMobBanner } from 'expo-ads-admob'; // <-- Add this
 import { useJobStore } from '@/store/jobStore';
 import SearchBar from '@/components/SearchBar';
 import FilterBar from '@/components/FilterBar';
@@ -34,7 +36,6 @@ export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [isSearchActive, setIsSearchActive] = useState(false);
   
-  // Group jobs by job type
   const fullTimeJobs = filteredJobs.filter(job => job.jobType === 'Full-time');
   const partTimeJobs = filteredJobs.filter(job => job.jobType === 'Part-time');
   const contractJobs = filteredJobs.filter(job => job.jobType === 'Contract');
@@ -44,7 +45,6 @@ export default function HomeScreen() {
   
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    // Simulate a refresh
     setTimeout(() => {
       setRefreshing(false);
     }, 1000);
@@ -161,6 +161,14 @@ export default function HomeScreen() {
           </>
         )}
       </ScrollView>
+
+      {/* AdMob Banner */}
+      <AdMobBanner
+        bannerSize="smartBannerPortrait"
+        adUnitID="ca-app-pub-4940119719361052/3982193172"
+        servePersonalizedAds
+        onDidFailToReceiveAdWithError={(error) => console.log(error)}
+      />
     </SafeAreaView>
   );
 }
