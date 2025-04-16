@@ -12,7 +12,12 @@
       "distribution": "internal"
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "install": {
+        "npm": {
+          "args": ["--legacy-peer-deps"]
+        }
+      }
     }
   },
   "submit": {
