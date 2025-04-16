@@ -8,8 +8,7 @@
       "autoIncrement": true,
       "env": {
         "EXPO_LEGACY_PEER_DEPS": "true"
-      },
-      "buildCommand": "sh eas-build-pre-install.sh"
+      }
     }
   },
   "submit": {
