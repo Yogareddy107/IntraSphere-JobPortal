@@ -16,7 +16,7 @@ export default function TabLayout() {
           backgroundColor: colors.background,
         },
         headerTitleStyle: {
-          fontWeight: '600',
+          fontWeight: "600",
         },
         headerTintColor: colors.text,
       }}

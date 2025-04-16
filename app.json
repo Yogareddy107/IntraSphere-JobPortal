@@ -4,18 +4,18 @@
     "slug": "intrasphere",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/icon.png", // Make sure this is a square image, e.g., 1024x1024
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/adaptive-icon.png", // Make sure this is a square image
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.intrasphere.app"
     },
     "web": {
       "bundler": "metro",
@@ -36,6 +36,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "d3cf6029-4101-4268-833b-703ecbb725df"
+      }
+    },
+    "owner": "yogareddy1819"
   }
 }
