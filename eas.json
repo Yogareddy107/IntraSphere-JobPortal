@@ -1,6 +1,6 @@
 {
   "cli": {
-    "version": ">= 3.13.0",
+    "version": ">= 16.3.1",
     "appVersionSource": "remote"
   },
   "build": {
@@ -12,13 +12,13 @@
       "distribution": "internal"
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "EXPO_LEGACY_PEER_DEPS": "true"
+      }
     }
   },
   "submit": {
     "production": {}
-  },
-  "hooks": {
-    "pre-install": "eas-build-pre-install.sh"
   }
 }
