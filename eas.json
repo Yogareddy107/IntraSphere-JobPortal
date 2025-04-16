@@ -3,6 +3,9 @@
     "version": ">= 16.3.1",
     "appVersionSource": "remote"
   },
+  "hooks": {
+    "preinstall": "eas-build-pre-install.sh"
+  },
   "build": {
     "production": {
       "autoIncrement": true,
@@ -10,9 +13,6 @@
         "EXPO_LEGACY_PEER_DEPS": "true"
       }
     }
-  },
-  "hooks": {
-    "preinstall": "eas-build-pre-install.sh"
   },
   "submit": {
     "production": {}
